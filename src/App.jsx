@@ -3,21 +3,16 @@ import { motion, useMotionValueEvent, useScroll } from 'framer-motion'
 import {
   ArrowDown,
   ArrowRight,
-  BookOpen,
   CheckCircle2,
-  ClipboardCheck,
   GraduationCap,
   HeartHandshake,
   MailCheck,
   MapPin,
   Menu,
-  MonitorPlay,
-  Palette,
   Phone,
   Route,
   ShieldCheck,
   Sparkles,
-  Trophy,
   Users,
   X,
 } from 'lucide-react'
@@ -31,57 +26,23 @@ const address =
 const images = {
   hero: '/images/school-hero.png',
   building: '/images/school-building.png',
-  posterOverview: '/images/felix-poster-overview.png',
-  posterAdmission: '/images/felix-poster-admission.png',
-  placeholder: '/images/school-placeholder.svg',
 }
 
 const navLinks = [
   ['Home', 'home'],
   ['About', 'about'],
   ['Facilities', 'facilities'],
-  ['Activities', 'activities'],
   ['Admissions', 'admissions'],
-  ['Gallery', 'gallery'],
   ['Contact', 'contact'],
 ]
 
 const trustPoints = ['English Medium', 'CBSE Pattern', 'Pre Nursery to Grade 8th']
 
 const features = [
-  ['Safe & Secure Environment', 'Controlled, child-friendly surroundings for everyday confidence.', ShieldCheck],
-  ['Spacious & Hygienic Classrooms', 'Clean, comfortable spaces planned for focused learning.', Sparkles],
-  ['Audio-Visual Learning', 'Modern AV support that helps lessons become clearer and more engaging.', MonitorPlay],
-  ['Fun Activities & Play-Based Education', 'Age-appropriate learning through stories, games and guided play.', HeartHandshake],
-  ['Caring & Qualified Teachers', 'Supportive teachers who understand each child’s pace and personality.', Users],
-  ['Holistic Development', 'Balanced attention to academics, confidence, discipline and values.', GraduationCap],
-  ['Focus on Academics, Sports & Arts', 'A broad school routine that encourages talent in many forms.', Trophy],
-  ['Affordable Fee Structure', 'Quality schooling with a parent-friendly admission approach.', CheckCircle2],
-  ['Assuring Progress of Every Child', 'Regular observation and encouragement for visible growth.', ClipboardCheck],
-  ['Experiential Learning', 'Hands-on activities that help children learn by doing.', BookOpen],
-]
-
-const activities = [
-  ['Spoken English', BookOpen],
-  ['Computer', MonitorPlay],
-  ['Paper Craft', Sparkles],
-  ['Painting', Palette],
-  ['Drawing', Palette],
-  ['Hand Writing', ClipboardCheck],
-  ['Sports & Outdoor Play', Trophy],
-  ['Creative Activities', Sparkles],
-]
-
-const admissionSteps = ['Enquire', 'Visit Campus', 'Submit Details', 'Admission Call']
-
-const galleryItems = [
-  ['School Building', images.hero, 'large'],
-  ['Campus Front', images.building, 'medium'],
-  ['Admission Poster', images.posterAdmission, 'poster'],
-  ['Class Activities', images.placeholder, 'small'],
-  ['Learning Activities', images.posterOverview, 'poster'],
-  ['Playground', images.placeholder, 'small'],
-  ['Transport', images.placeholder, 'small'],
+  ['Safe & Secure Environment', 'A calm, child-friendly campus parents can trust.', ShieldCheck],
+  ['Caring & Qualified Teachers', 'Supportive teachers who understand every child’s pace.', Users],
+  ['Fun Activities & Play-Based Education', 'Age-appropriate activities that keep learning joyful.', HeartHandshake],
+  ['Simple Admission Process', 'Speak with the school team and get clear guidance.', CheckCircle2],
 ]
 
 const fadeUp = {
@@ -89,10 +50,10 @@ const fadeUp = {
   visible: { opacity: 1, y: 0 },
 }
 
-function SectionIntro({ kicker, title, children, align = 'center', light = false }) {
+function SectionIntro({ kicker, title, children, align = 'center' }) {
   return (
     <motion.div
-      className={`section-intro section-intro-${align} ${light ? 'section-intro-light' : ''}`}
+      className={`section-intro section-intro-${align}`}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.3 }}
@@ -238,7 +199,7 @@ function Hero() {
           }}
         >
           <motion.p className="accent-line" variants={fadeUp}>
-            A parent-friendly English Medium school in Bhopal
+            Admissions Open 2026–27
           </motion.p>
           <h1 aria-label="A Great Beginning for a Bright Future.">
             {words.map((word) => (
@@ -253,17 +214,17 @@ function Hero() {
             ))}
           </h1>
           <motion.p className="hero-subcopy" variants={fadeUp}>
-            Felix International School offers a safe, caring and engaging learning
-            environment from Pre Nursery to Grade 8th.
+            Felix International School offers a safe, caring and engaging English-medium
+            learning environment from Pre Nursery to Grade 8th.
           </motion.p>
           <motion.div className="hero-actions" variants={fadeUp}>
             <a href="#admissions" className="button button-primary">
               <Sparkles size={18} />
               Apply for 2026–27
             </a>
-            <a href="#about" className="button button-ghost">
-              Learn More
-              <ArrowRight size={18} />
+            <a href={`tel:${primaryPhone}`} className="button button-ghost">
+              <Phone size={18} />
+              Call Now
             </a>
           </motion.div>
           <motion.div className="hero-trust-grid" variants={fadeUp}>
@@ -313,7 +274,7 @@ function About() {
         >
           <ImagePanel src={images.building} alt="Felix International School building" label="New Koh E Fiza, Bhopal" />
           <div className="quote-card">
-            <p>“A Great Beginning for a Bright Future”</p>
+            <p>“Nurturing Minds. Building Futures.”</p>
           </div>
         </motion.div>
 
@@ -327,20 +288,18 @@ function About() {
         >
           <SectionIntro
             align="left"
-            kicker="Who we are"
-            title="Welcome to <em>Felix International School</em>"
+            kicker="Welcome"
+            title="Felix International School, <em>Bhopal</em>"
           >
-            Felix International School is dedicated to nurturing young minds through
-            quality education, play-based learning, creativity, discipline and holistic
-            development. The school provides a safe, hygienic and positive environment
-            where every child can grow with confidence.
+            A parent-friendly English Medium school following CBSE Pattern, focused on
+            safe learning, confident communication, discipline and overall growth.
           </SectionIntro>
           <div className="fact-grid">
             {[
               ['Classes', 'Pre Nursery to Grade 8th'],
               ['Medium', 'English Medium'],
               ['Pattern', 'CBSE Pattern'],
-              ['Location', 'Bhopal'],
+              ['Session', 'Admissions Open 2026–27'],
             ].map(([label, value]) => (
               <div key={label} className="fact-card">
                 <small>{label}</small>
@@ -359,17 +318,16 @@ function Features() {
     <section id="facilities" className="section features-section">
       <div className="container">
         <SectionIntro
-          kicker="Facilities & strengths"
-          title="A school environment parents can <em>trust</em>"
+          kicker="Why choose Felix"
+          title="A cleaner look at what parents care about most"
         >
-          Thoughtful facilities, caring teachers and balanced learning experiences help
-          children feel safe, confident and ready to grow.
+          Just the essentials: safety, care, joyful learning and a simple admission path.
         </SectionIntro>
-        <div className="feature-grid">
+        <div className="feature-grid feature-grid-simple">
           {features.map(([title, description, Icon], index) => (
             <motion.article
               key={title}
-              className={`feature-card ${index === 7 ? 'feature-card-accent' : ''}`}
+              className={`feature-card ${index === 3 ? 'feature-card-accent' : ''}`}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.2 }}
@@ -379,81 +337,6 @@ function Features() {
               <Icon size={30} />
               <h3>{title}</h3>
               <p>{description}</p>
-            </motion.article>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-function PosterShowcase() {
-  return (
-    <section className="section poster-section">
-      <div className="poster-shell">
-        <motion.div
-          className="poster-copy"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.25 }}
-          variants={fadeUp}
-          transition={{ duration: 0.65 }}
-        >
-          <p className="kicker">Admission campaign</p>
-          <h2>
-            Campaign creatives, now placed inside a cleaner <em>premium web story.</em>
-          </h2>
-          <p>
-            The posters are included as shareable admission highlights, while the main
-            website stays calmer, easier to read and more trustworthy for parents.
-          </p>
-          <a href="#admissions" className="button button-yellow">
-            Request Admission Call
-            <ArrowRight size={18} />
-          </a>
-        </motion.div>
-
-        <motion.div
-          className="poster-stack"
-          initial={{ opacity: 0, y: 28 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.65, delay: 0.08 }}
-        >
-          <img src={images.posterOverview} alt="Felix International School admission poster with features" />
-          <img src={images.posterAdmission} alt="Felix International School admission poster with school building" />
-        </motion.div>
-      </div>
-    </section>
-  )
-}
-
-function Activities() {
-  return (
-    <section id="activities" className="section activities-section">
-      <div className="container">
-        <SectionIntro
-          light
-          kicker="Activities & learning"
-          title="Learning that feels active, creative and <em>joyful</em>"
-        >
-          Children learn through language, technology, art, handwriting, sports and
-          guided creative activities.
-        </SectionIntro>
-        <div className="activity-row" aria-label="Activities and learning areas">
-          {activities.map(([title, Icon], index) => (
-            <motion.article
-              key={title}
-              className="activity-card"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              variants={fadeUp}
-              transition={{ duration: 0.45, delay: index * 0.04 }}
-            >
-              <Icon size={30} />
-              <h3>{title}</h3>
-              <span>{String(index + 1).padStart(2, '0')}</span>
             </motion.article>
           ))}
         </div>
@@ -486,22 +369,14 @@ function Admissions() {
           variants={fadeUp}
           transition={{ duration: 0.65 }}
         >
-          <p className="kicker">Admissions Open for Session 2026–27</p>
+          <p className="kicker">Admission enquiry</p>
           <h2>
-            Your child’s journey starts <em>here.</em>
+            Admissions Open for Session <em>2026–27.</em>
           </h2>
           <p>
-            Classes are open from Pre Nursery to Grade 8th for English Medium learning
-            with CBSE Pattern academic guidance.
+            Share your details and the school team will contact you shortly for Pre
+            Nursery to Grade 8th admissions.
           </p>
-          <div className="step-list">
-            {admissionSteps.map((step, index) => (
-              <div key={step} className="step-item">
-                <span>{index + 1}</span>
-                <strong>{step}</strong>
-              </div>
-            ))}
-          </div>
           <div className="admission-callout">
             <strong>Classes: Pre Nursery to Grade 8th</strong>
             <span>English Medium | CBSE Pattern | Friendly learning environment</span>
@@ -519,7 +394,7 @@ function Admissions() {
           <div className="form-card-header">
             <span>Apply Now</span>
             <h3>Request Admission Call</h3>
-            <p>Share your details and the school team can guide you through the next steps.</p>
+            <p>Our admission team will contact you shortly.</p>
           </div>
           <form onSubmit={handleSubmit}>
             <label>
@@ -587,27 +462,6 @@ function Admissions() {
   )
 }
 
-function Gallery() {
-  return (
-    <section id="gallery" className="section gallery-section">
-      <div className="container">
-        <SectionIntro kicker="Gallery" title="Campus visuals and admission <em>highlights</em>">
-          Real school visuals are featured first. The placeholder cards are ready for
-          classroom, playground, transport and learning photos when available.
-        </SectionIntro>
-        <div className="masonry-gallery">
-          {galleryItems.map(([title, image, size]) => (
-            <article key={title} className={`gallery-item gallery-${size}`}>
-              <img src={image} alt={title} />
-              <span>{title}</span>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
 function Contact() {
   const mapsQuery = encodeURIComponent(address)
   const whatsappText = encodeURIComponent(
@@ -616,14 +470,14 @@ function Contact() {
 
   return (
     <section id="contact" className="section contact-section">
-      <div className="contact-shell">
+      <div className="contact-shell contact-shell-simple">
         <div className="contact-details">
           <SectionIntro
             align="left"
             kicker="Contact"
             title="Visit or speak with <em>Felix International School</em>"
           >
-            We are located near Dwarka Dham on Airport Karond Bypass, Bhopal.
+            {address}
           </SectionIntro>
           <div className="contact-card">
             <h3>Felix International School</h3>
@@ -664,19 +518,7 @@ function Contact() {
           </div>
         </div>
 
-        <div className="map-panel">
-          <MapPin size={36} />
-          <h3>Google Map Placeholder</h3>
-          <p>{address}</p>
-          <a
-            href={`https://www.google.com/maps/search/?api=1&query=${mapsQuery}`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Open in Google Maps
-            <ArrowRight size={17} />
-          </a>
-        </div>
+        <ImagePanel src={images.building} alt="Felix International School campus" className="contact-image" />
       </div>
     </section>
   )
@@ -685,23 +527,15 @@ function Contact() {
 function Footer() {
   return (
     <footer className="footer">
-      <div className="footer-grid">
+      <div className="footer-grid footer-grid-simple">
         <div>
           <h2>Felix International School</h2>
           <p>Nurturing Minds. Building Futures.</p>
         </div>
         <div>
-          <h3>Quick Links</h3>
-          {navLinks.map(([label, id]) => (
-            <a key={id} href={`#${id}`}>
-              {label}
-            </a>
-          ))}
-        </div>
-        <div>
           <h3>Contact</h3>
-          <p>{address}</p>
           <p>{phoneNumbers.join(' | ')}</p>
+          <p>{address}</p>
         </div>
       </div>
       <div className="footer-bottom">Copyright 2026 Felix International School. All rights reserved.</div>
@@ -744,10 +578,7 @@ function App() {
         <Hero />
         <About />
         <Features />
-        <PosterShowcase />
-        <Activities />
         <Admissions />
-        <Gallery />
         <Contact />
       </main>
       <Footer />
