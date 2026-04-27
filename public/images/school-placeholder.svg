@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Felix International School image placeholder">
+  <defs>
+    <linearGradient id="sky" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#f8f3e8"/>
+      <stop offset="1" stop-color="#dfe9f5"/>
+    </linearGradient>
+    <linearGradient id="front" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#f2f5f9"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#sky)"/>
+  <circle cx="1020" cy="140" r="88" fill="#f5c35c" opacity=".9"/>
+  <path d="M0 650c152-58 278-65 430-20 183 54 319 34 475-19 128-43 218-35 295 2v187H0z" fill="#071f3f" opacity=".12"/>
+  <path d="M165 548h870v158H165z" fill="#071f3f"/>
+  <path d="M230 310h740v250H230z" fill="url(#front)"/>
+  <path d="M190 280h820l-82-86H272z" fill="#b51e2e"/>
+  <path d="M545 184h110v376H545z" fill="#ffffff"/>
+  <path d="M514 192h172l-86-86z" fill="#071f3f"/>
+  <rect x="304" y="362" width="80" height="70" rx="6" fill="#dbe8f4"/>
+  <rect x="430" y="362" width="80" height="70" rx="6" fill="#dbe8f4"/>
+  <rect x="690" y="362" width="80" height="70" rx="6" fill="#dbe8f4"/>
+  <rect x="816" y="362" width="80" height="70" rx="6" fill="#dbe8f4"/>
+  <rect x="565" y="430" width="70" height="130" rx="8" fill="#071f3f"/>
+  <rect x="260" y="520" width="680" height="40" fill="#f5c35c"/>
+  <text x="600" y="650" text-anchor="middle" font-family="Arial, sans-serif" font-size="46" font-weight="800" fill="#ffffff">Felix International School</text>
+  <text x="600" y="696" text-anchor="middle" font-family="Arial, sans-serif" font-size="25" font-weight="700" fill="#f8f3e8">Replace with real campus photo</text>
+</svg>
