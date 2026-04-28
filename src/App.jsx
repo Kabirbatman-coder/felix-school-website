@@ -16,6 +16,7 @@ import {
   Users,
   X,
 } from 'lucide-react'
+import { supabase } from './lib/supabaseClient'
 import './App.css'
 
 const phoneNumbers = ['0755-4568550', '7987009527', '8871167393']
@@ -48,6 +49,20 @@ const features = [
 const fadeUp = {
   hidden: { opacity: 0, y: 26 },
   visible: { opacity: 1, y: 0 },
+}
+
+const emptyAdmissionForm = {
+  parentName: '',
+  studentName: '',
+  classInterested: '',
+  phone: '',
+  message: '',
+}
+
+function isValidPhoneNumber(phone) {
+  const normalizedPhone = phone.trim().replace(/[\s-]/g, '')
+
+  return /^(\+91)?[6-9]\d{9}$/.test(normalizedPhone) || /^0\d{9,11}$/.test(normalizedPhone)
 }
 
 function SectionIntro({ kicker, title, children, align = 'center' }) {
@@ -346,12 +361,74 @@ function Features() {
 }
 
 function Admissions() {
-  const [submitted, setSubmitted] = useState(false)
+  const [form, setForm] = useState(emptyAdmissionForm)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [formMessage, setFormMessage] = useState(null)
 
-  function handleSubmit(event) {
+  function updateField(event) {
+    const { name, value } = event.target
+    setForm((currentForm) => ({ ...currentForm, [name]: value }))
+  }
+
+  async function handleSubmit(event) {
     event.preventDefault()
-    setSubmitted(true)
-    event.currentTarget.reset()
+    setFormMessage(null)
+
+    const parentName = form.parentName.trim()
+    const studentName = form.studentName.trim()
+    const classInterested = form.classInterested.trim()
+    const phone = form.phone.trim()
+    const message = form.message.trim()
+
+    if (!parentName || !studentName || !classInterested || !phone) {
+      setFormMessage({
+        type: 'error',
+        text: 'Please fill all required fields before submitting.',
+      })
+      return
+    }
+
+    if (!isValidPhoneNumber(phone)) {
+      setFormMessage({
+        type: 'error',
+        text: 'Please enter a valid Indian mobile or landline number.',
+      })
+      return
+    }
+
+    setIsSubmitting(true)
+
+    try {
+      const { error } = await supabase.from('admission_enquiries').insert([
+        {
+          parent_name: parentName,
+          student_name: studentName,
+          class_interested: classInterested,
+          phone,
+          message: message || null,
+          source: 'website',
+        },
+      ])
+
+      if (error) {
+        console.error('Supabase insert error:', error)
+        throw error
+      }
+
+      setForm(emptyAdmissionForm)
+      setFormMessage({
+        type: 'success',
+        text: 'Thank you! Our admission team will contact you shortly.',
+      })
+    } catch (error) {
+      console.error('Admission enquiry submit error:', error)
+      setFormMessage({
+        type: 'error',
+        text: 'Something went wrong. Please try again or call the school directly.',
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const whatsappText = encodeURIComponent(
@@ -399,15 +476,32 @@ function Admissions() {
           <form onSubmit={handleSubmit}>
             <label>
               Parent Name
-              <input required name="parentName" placeholder="Enter parent name" />
+              <input
+                required
+                name="parentName"
+                placeholder="Enter parent name"
+                value={form.parentName}
+                onChange={updateField}
+              />
             </label>
             <label>
               Student Name
-              <input required name="studentName" placeholder="Enter student name" />
+              <input
+                required
+                name="studentName"
+                placeholder="Enter student name"
+                value={form.studentName}
+                onChange={updateField}
+              />
             </label>
             <label>
               Class Interested In
-              <select required name="classInterested" defaultValue="">
+              <select
+                required
+                name="classInterested"
+                value={form.classInterested}
+                onChange={updateField}
+              >
                 <option value="" disabled>
                   Select class
                 </option>
@@ -431,19 +525,36 @@ function Admissions() {
             </label>
             <label>
               Phone Number
-              <input required name="phone" placeholder="Enter phone number" inputMode="tel" />
+              <input
+                required
+                name="phone"
+                placeholder="Enter phone number"
+                inputMode="tel"
+                value={form.phone}
+                onChange={updateField}
+              />
             </label>
             <label className="full-field">
               Message
-              <textarea name="message" placeholder="Write a short message" rows="4" />
+              <textarea
+                name="message"
+                placeholder="Write a short message"
+                rows="4"
+                value={form.message}
+                onChange={updateField}
+              />
             </label>
-            <button className="button button-primary full-field" type="submit">
-              Request Admission Call
+            <button
+              className="button button-primary full-field"
+              type="submit"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Submitting...' : 'Request Admission Call'}
               <MailCheck size={18} />
             </button>
-            {submitted && (
-              <p className="success-message full-field">
-                Thank you. Your admission enquiry has been noted on this page.
+            {formMessage && (
+              <p className={`${formMessage.type}-message full-field`} role="status">
+                {formMessage.text}
               </p>
             )}
           </form>
