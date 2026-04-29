@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, useMotionValueEvent, useScroll } from 'framer-motion'
 import {
   ArrowDown,
@@ -19,14 +19,16 @@ import {
 import { supabase } from './lib/supabaseClient'
 import './App.css'
 
-const phoneNumbers = ['0755-4568550', '7987009527', '8871167393']
-const primaryPhone = '7987009527'
+const phoneNumbers = ['8871167393', '0755-4568550', '7987009527']
+const primaryPhone = '8871167393'
 const address =
   'New Jail Badbai Road, New Koh E Fiza, Airport Karond Bypass, Near Dwarka Dham, Bhopal'
 
 const images = {
   hero: '/images/school-hero.png',
   building: '/images/school-building.png',
+  child: '/images/child.jpeg',
+  childrenVideo: '/images/chilldren.mp4',
 }
 
 const navLinks = [
@@ -97,22 +99,59 @@ function ImagePanel({ src, alt, className = '', label }) {
   )
 }
 
-function AnnouncementBar({ onDismiss }) {
+function VideoPanel({ src, className = '', label }) {
+  const panelRef = useRef(null)
+  const videoRef = useRef(null)
+  const [isInView, setIsInView] = useState(false)
+
+  useEffect(() => {
+    const panel = panelRef.current
+    const video = videoRef.current
+
+    if (!panel || !video) return undefined
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const shouldPlay = entry.isIntersecting && entry.intersectionRatio > 0.45
+        setIsInView(shouldPlay)
+
+        if (shouldPlay) {
+          video.play().catch(() => {})
+        } else {
+          video.pause()
+        }
+      },
+      { threshold: [0, 0.45, 0.75] },
+    )
+
+    observer.observe(panel)
+
+    return () => {
+      observer.disconnect()
+      video.pause()
+    }
+  }, [])
+
   return (
-    <div className="announcement-bar">
-      <a href="#admissions">
-        <Sparkles size={16} />
-        <span>Admissions Open 2026–27 — Pre Nursery to Grade 8th | CBSE Pattern</span>
-        <ArrowRight size={16} />
-      </a>
-      <button type="button" aria-label="Dismiss announcement" onClick={onDismiss}>
-        <X size={16} />
-      </button>
-    </div>
+    <motion.div
+      ref={panelRef}
+      className={`video-panel ${className} ${isInView ? 'video-panel-playing' : ''}`}
+      whileHover={{ y: -6, rotate: 0, transition: { duration: 0.25 } }}
+    >
+      <video ref={videoRef} src={src} muted loop playsInline preload="metadata" />
+      <motion.div
+        className="video-shine"
+        aria-hidden="true"
+        animate={isInView ? { x: ['-140%', '140%'] } : { x: '-140%' }}
+        transition={{ duration: 1.8, ease: 'easeInOut', repeat: 0 }}
+      />
+      {label && <span>{label}</span>}
+      {!isInView && <div className="video-play-hint">Scroll to play</div>}
+    </motion.div>
   )
 }
 
-function Header({ showAnnouncement, onDismissAnnouncement }) {
+function Header() {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const { scrollY } = useScroll()
@@ -125,7 +164,13 @@ function Header({ showAnnouncement, onDismissAnnouncement }) {
 
   return (
     <div className={`site-chrome ${scrolled ? 'site-chrome-scrolled' : ''}`}>
-      {showAnnouncement && <AnnouncementBar onDismiss={onDismissAnnouncement} />}
+      <div className="announcement-bar">
+        <a href="#admissions">
+          <Sparkles size={16} />
+          <span>Admissions Open 2026–27 — Pre Nursery to Grade 8th | CBSE Pattern</span>
+          <ArrowRight size={16} />
+        </a>
+      </div>
       <header className="site-header">
         <nav aria-label="Primary navigation" className="nav-shell">
           <a href="#home" className="brand" onClick={closeMenu}>
@@ -216,7 +261,8 @@ function Hero() {
           <motion.p className="accent-line" variants={fadeUp}>
             Admissions Open 2026–27
           </motion.p>
-          <h1 aria-label="A Great Beginning for a Bright Future.">
+          <h1 className="hero-title-mobile">Admissions Open for 2026–27</h1>
+          <h1 className="hero-title-desktop" aria-label="A Great Beginning for a Bright Future.">
             {words.map((word) => (
               <motion.span
                 key={word}
@@ -280,14 +326,19 @@ function About() {
     <section id="about" className="section about-section">
       <div className="two-column">
         <motion.div
-          className="about-visual"
+          className="about-visual about-child-visual media-showcase"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.25 }}
           variants={fadeUp}
           transition={{ duration: 0.65 }}
         >
-          <ImagePanel src={images.building} alt="Felix International School building" label="New Koh E Fiza, Bhopal" />
+          <ImagePanel
+            src={images.child}
+            alt="Happy student at Felix International School"
+            className="child-image"
+            label="A happy start to learning"
+          />
           <div className="quote-card">
             <p>“Nurturing Minds. Building Futures.”</p>
           </div>
@@ -329,29 +380,59 @@ function About() {
 }
 
 function Features() {
+  const featureCards = features.map(([title, description, Icon], index) => (
+    <motion.article
+      key={title}
+      className={`feature-card ${index === 3 ? 'feature-card-accent' : ''}`}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      variants={fadeUp}
+      transition={{ duration: 0.45, delay: index * 0.035 }}
+    >
+      <Icon size={30} />
+      <h3>{title}</h3>
+      <p>{description}</p>
+    </motion.article>
+  ))
+
   return (
     <section id="facilities" className="section features-section">
       <div className="container">
         <SectionIntro
-          kicker="Why choose Felix"
-          title="A cleaner look at what parents care about most"
+          title="Why choose <em>Felix?</em>"
+        />
+        <motion.div
+          className="feature-grid feature-grid-simple feature-grid-mobile"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.18 }}
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.08 } },
+          }}
         >
-          Just the essentials: safety, care, joyful learning and a simple admission path.
-        </SectionIntro>
-        <div className="feature-grid feature-grid-simple">
+          {featureCards}
+        </motion.div>
+        <div className="feature-stack-native" aria-label="Felix International School highlights">
           {features.map(([title, description, Icon], index) => (
             <motion.article
               key={title}
-              className={`feature-card ${index === 3 ? 'feature-card-accent' : ''}`}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              variants={fadeUp}
-              transition={{ duration: 0.45, delay: index * 0.035 }}
+              className={`feature-stack-native-card ${index === 3 ? 'feature-stack-native-card-accent' : ''}`}
+              initial={{ opacity: 0, y: 42 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{ duration: 0.55, delay: index * 0.05, ease: 'easeOut' }}
+              style={{ top: `${118 + index * 18}px` }}
             >
-              <Icon size={30} />
-              <h3>{title}</h3>
-              <p>{description}</p>
+              <span className="feature-stack-number">0{index + 1}</span>
+              <span className="feature-stack-native-icon">
+                <Icon size={32} />
+              </span>
+              <span>
+                <h3>{title}</h3>
+                <p>{description}</p>
+              </span>
             </motion.article>
           ))}
         </div>
@@ -439,20 +520,16 @@ function Admissions() {
     <section id="admissions" className="section admissions-section">
       <div className="admissions-shell">
         <motion.div
-          className="admission-process"
+          className="admission-process admission-floating-card"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.25 }}
           variants={fadeUp}
           transition={{ duration: 0.65 }}
         >
-          <p className="kicker">Admission enquiry</p>
-          <h2>
-            Admissions Open for Session <em>2026–27.</em>
-          </h2>
+          <h2>Admissions Open <em>2026–27</em></h2>
           <p>
-            Share your details and the school team will contact you shortly for Pre
-            Nursery to Grade 8th admissions.
+            Share your details for Pre Nursery to Grade 8th admissions.
           </p>
           <div className="admission-callout">
             <strong>Classes: Pre Nursery to Grade 8th</strong>
@@ -629,7 +706,20 @@ function Contact() {
           </div>
         </div>
 
-        <ImagePanel src={images.building} alt="Felix International School campus" className="contact-image" />
+        <motion.div
+          className="contact-video-wrap media-showcase"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.22 }}
+          variants={fadeUp}
+          transition={{ duration: 0.65, delay: 0.08 }}
+        >
+          <VideoPanel
+            src={images.childrenVideo}
+            className="contact-video"
+            label="Campus moments"
+          />
+        </motion.div>
       </div>
     </section>
   )
@@ -669,22 +759,9 @@ function MobileApplyBar() {
 }
 
 function App() {
-  const [showAnnouncement, setShowAnnouncement] = useState(() => {
-    if (typeof window === 'undefined') {
-      return true
-    }
-
-    return window.localStorage.getItem('felix-announcement') !== 'hidden'
-  })
-
-  function dismissAnnouncement() {
-    window.localStorage.setItem('felix-announcement', 'hidden')
-    setShowAnnouncement(false)
-  }
-
   return (
     <>
-      <Header showAnnouncement={showAnnouncement} onDismissAnnouncement={dismissAnnouncement} />
+      <Header />
       <main>
         <Hero />
         <About />

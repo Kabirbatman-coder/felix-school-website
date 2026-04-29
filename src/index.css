@@ -40,6 +40,7 @@
 }
 
 html {
+  overflow-x: hidden;
   scroll-behavior: smooth;
 }
 
@@ -48,6 +49,7 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--body);
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
